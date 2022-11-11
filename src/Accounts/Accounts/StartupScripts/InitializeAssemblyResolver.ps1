@@ -1,4 +1,8 @@
-﻿if ($PSEdition -eq 'Desktop') {
+﻿[Microsoft.Azure.PowerShell.AssemblyLoading.ConditionalAssemblyCollection]::Initialize(
+  [Microsoft.Azure.PowerShell.AssemblyLoading.ConditionalAssemblyBuilderContext]::new($Host.Version)
+)
+
+if ($PSEdition -eq 'Desktop') {
   try {
     [Microsoft.Azure.Commands.Profile.Utilities.CustomAssemblyResolver]::Initialize()
   }
