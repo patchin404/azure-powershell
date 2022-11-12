@@ -19,6 +19,8 @@
 --->
 
 ## Upcoming Release
+
+## Version 5.1.2
 * Upgraded AutoMapper to Microsoft.Azure.PowerShell.AutoMapper 8.1.1 [#18721]
 
 ## Version 5.1.1
