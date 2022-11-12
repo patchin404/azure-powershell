@@ -19,6 +19,7 @@
 -->
 ## Upcoming Release
 * Bumped API version to 2022-09-01
+* Upgraded AutoMapper to Microsoft.Azure.PowerShell.AutoMapper 8.1.1 [#18721]
 
 ## Version 5.0.0
 * [Breaking Change] Removed the alias `Install-AzAksKubectl` of `Install-AzAksCliTool`.

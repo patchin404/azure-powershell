@@ -18,6 +18,7 @@
         - Additional information about change #1
 -->
 ## Upcoming Release
+* Upgraded AutoMapper to Microsoft.Azure.PowerShell.AutoMapper 8.1.1 [#18721]
 
 ## Version 6.1.0
 * Added support for cross zonal restore for ZRS vaults for non-ZonePinned VM
