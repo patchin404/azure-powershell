@@ -69,6 +69,7 @@ namespace Microsoft.Azure.PowerShell.AuthenticationAssemblyLoadContext
 
         private static System.Reflection.Assembly Default_Resolving(AssemblyLoadContext context, System.Reflection.AssemblyName assemblyName)
         {
+            // todo: how to resolve with assembly path
             if (AzSharedAssemblyMap.ContainsKey(assemblyName.Name) && AzSharedAssemblyMap[assemblyName.Name] >= assemblyName.Version)
             {
                 return AzAssemblyLoadContext.GetForDirectory(AzSharedAssemblyDirectory).LoadFromAssemblyName(assemblyName);
