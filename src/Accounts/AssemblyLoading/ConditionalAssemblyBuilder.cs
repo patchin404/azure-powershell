@@ -6,11 +6,12 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading
 {
     public class ConditionalAssemblyBuilder : IConditionalAssemblyBuilder
     {
-        public ConditionalAssemblyBuilder(IConditionalAssemblyBuilderContext context, string path, string version)
+        public ConditionalAssemblyBuilder(IConditionalAssemblyBuilderContext context, string path, Version version)
         {
             Context = context;
             _path = path;
-            _version = new Version(version);
+            _version = version;
+            ShouldLoad = true;
         }
 
         public bool ShouldLoad { get; private set; }

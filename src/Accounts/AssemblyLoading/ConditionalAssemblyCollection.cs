@@ -10,6 +10,8 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading
         private static IConditionalAssemblyBuilderContext _context;
         private static IEnumerable<IConditionalAssemblyBuilder> _assemblyBuilders;
 
+        // maybe: use Lazy to defer the initialization
+
         public static void Initialize(IConditionalAssemblyBuilderContext context)
         {
             _context = context;
@@ -53,7 +55,7 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading
             };
         }
 
-        private static ConditionalAssemblyBuilder CreateAssembly(string path, string version) => new ConditionalAssemblyBuilder(_context, path, version);
+        private static ConditionalAssemblyBuilder CreateAssembly(string path, string version) => new ConditionalAssemblyBuilder(_context, path, new Version(version));
 
         public static IDictionary<string, Version> GetAssemblies()
         {
