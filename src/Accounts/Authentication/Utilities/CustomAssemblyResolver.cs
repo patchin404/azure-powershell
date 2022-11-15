@@ -22,7 +22,7 @@ namespace Microsoft.Azure.Commands.Profile.Utilities
 {
     public static class CustomAssemblyResolver
     {
-        private static IDictionary<string, Version> NetFxPreloadAssemblies = ConditionalAssemblyCollection.GetAssemblies();
+        private static IDictionary<string, (string Framework, Version Version)> NetFxPreloadAssemblies = ConditionalAssemblyCollection.GetAssemblies();
 
         private static string PreloadAssemblyFolder { get; set; }
 
@@ -30,7 +30,7 @@ namespace Microsoft.Azure.Commands.Profile.Utilities
         {
             //This function is call before loading assemblies in PreloadAssemblies folder, so NewtonSoft.Json could not be used here
             var accountFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            PreloadAssemblyFolder = Path.Combine(accountFolder, "PreloadAssemblies");
+            PreloadAssemblyFolder = Path.Combine(accountFolder, "lib");
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
 
@@ -42,12 +42,14 @@ namespace Microsoft.Azure.Commands.Profile.Utilities
             try
             {
                 AssemblyName name = new AssemblyName(args.Name);
-                if (NetFxPreloadAssemblies.TryGetValue(name.Name, out Version version))
+                if (NetFxPreloadAssemblies.TryGetValue(name.Name, out var assembly))
                 {
                     //For Newtonsoft.Json, allow to use bigger version to replace smaller version
-                    if (version >= name.Version && (version.Major == name.Version.Major || string.Equals(name.Name, "Newtonsoft.Json", StringComparison.OrdinalIgnoreCase)))
+                    if (assembly.Version >= name.Version
+                        && (assembly.Version.Major == name.Version.Major
+                            || string.Equals(name.Name, "Newtonsoft.Json", StringComparison.OrdinalIgnoreCase)))
                     {
-                        string requiredAssembly = Path.Combine(PreloadAssemblyFolder, $"{name.Name}.dll");
+                        string requiredAssembly = Path.Combine(PreloadAssemblyFolder, assembly.Framework, $"{name.Name}.dll");
                         return Assembly.LoadFrom(requiredAssembly);
                     }
                 }

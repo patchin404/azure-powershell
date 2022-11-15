@@ -23,7 +23,7 @@ namespace Microsoft.Azure.PowerShell.AuthenticationAssemblyLoadContext
     public static class AzAssemblyLoadContextInitializer
     {
         private static string AzSharedAssemblyDirectory { get; set; }
-        private static ConcurrentDictionary<string, Version> AzSharedAssemblyMap { get; set; }
+        private static ConcurrentDictionary<string, (string Framework, Version Version)> AzSharedAssemblyMap { get; set; }
         private static ConcurrentDictionary<string, string> ModuleAlcEntryAssemblyMap { get; set; }
 
         static AzAssemblyLoadContextInitializer()
@@ -42,7 +42,7 @@ namespace Microsoft.Azure.PowerShell.AuthenticationAssemblyLoadContext
             //    {"System.Text.Json", new Version("4.0.1.2")},
             //};
 
-            AzSharedAssemblyMap = new ConcurrentDictionary<string, Version>(azSharedAssemblies, StringComparer.OrdinalIgnoreCase);
+            AzSharedAssemblyMap = new ConcurrentDictionary<string, (string, Version)>(azSharedAssemblies, StringComparer.OrdinalIgnoreCase);
 
             ModuleAlcEntryAssemblyMap = new ConcurrentDictionary<string, string>();
         }
@@ -70,9 +70,10 @@ namespace Microsoft.Azure.PowerShell.AuthenticationAssemblyLoadContext
         private static System.Reflection.Assembly Default_Resolving(AssemblyLoadContext context, System.Reflection.AssemblyName assemblyName)
         {
             // todo: how to resolve with assembly path
-            if (AzSharedAssemblyMap.ContainsKey(assemblyName.Name) && AzSharedAssemblyMap[assemblyName.Name] >= assemblyName.Version)
+            if (AzSharedAssemblyMap.TryGetValue(assemblyName.Name, out var azSharedAssembly) && azSharedAssembly.Version >= assemblyName.Version)
             {
-                return AzAssemblyLoadContext.GetForDirectory(AzSharedAssemblyDirectory).LoadFromAssemblyName(assemblyName);
+                //return AzAssemblyLoadContext.GetForDirectory(AzSharedAssemblyDirectory).LoadFromAssemblyName(assemblyName);
+                return AzAssemblyLoadContext.GetForDirectory(AzSharedAssemblyDirectory).LoadFromAssemblyPath(Path.Combine(AzSharedAssemblyDirectory, azSharedAssembly.Framework, assemblyName.Name + ".dll"));
             }
 
             if (ModuleAlcEntryAssemblyMap.TryGetValue(assemblyName.Name, out string moduleLoadContextDirectory))

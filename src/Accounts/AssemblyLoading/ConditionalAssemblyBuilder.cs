@@ -6,11 +6,12 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading
 {
     public class ConditionalAssemblyBuilder : IConditionalAssemblyBuilder
     {
-        public ConditionalAssemblyBuilder(IConditionalAssemblyBuilderContext context, string path, Version version)
+        public ConditionalAssemblyBuilder(IConditionalAssemblyBuilderContext context, string name, string framework, Version version)
         {
             Context = context;
-            _path = path;
-            _version = version;
+            Name = name;
+            Framework = framework;
+            Version = version;
             ShouldLoad = true;
         }
 
@@ -23,10 +24,11 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading
 
         internal IConditionalAssemblyBuilderContext Context;
 
-        public string Path => _path;
-        private string _path;
+        public Version Version { get; }
 
-        public Version Version => _version;
-        private Version _version;
+        public string Name { get; }
+
+        public string Framework { get; }
+
     }
 }

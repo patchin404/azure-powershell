@@ -10,8 +10,9 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
         [Fact]
         public void ShouldLoadAssemblyWithoutConstraint()
         {
-            IConditionalAssemblyBuilder assemblyBuilder = new ConditionalAssemblyBuilder(null, "path", new Version(1, 0, 0));
-            Assert.True(assemblyBuilder.ShouldLoad);
+            var context = new MockConditionalAssemblyBuilderContext();
+            var assembly = NewDummyAssembly(context);
+            Assert.True(assembly.ShouldLoad);
         }
 
         [Fact]
@@ -142,10 +143,11 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
             context.PSVersion = Version.Parse("5.1.0");
             Assert.False(assembly.ShouldLoad);
         }
+        //todo: how to test same assembly different framework?
 
         private static ConditionalAssemblyBuilder NewDummyAssembly(MockConditionalAssemblyBuilderContext context)
         {
-            return new ConditionalAssemblyBuilder(context, "path", new Version(1, 0, 0));
+            return new ConditionalAssemblyBuilder(context, "name", "framework", new Version(1, 0, 0));
         }
     }
 }
