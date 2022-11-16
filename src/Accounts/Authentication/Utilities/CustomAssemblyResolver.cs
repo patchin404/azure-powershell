@@ -22,7 +22,7 @@ namespace Microsoft.Azure.Commands.Profile.Utilities
 {
     public static class CustomAssemblyResolver
     {
-        private static IDictionary<string, (string Framework, Version Version)> NetFxPreloadAssemblies = ConditionalAssemblyCollection.GetAssemblies();
+        private static IDictionary<string, (string Framework, Version Version)> NetFxPreloadAssemblies = ConditionalAssemblyProvider.GetAssemblies();
 
         private static string PreloadAssemblyFolder { get; set; }
 

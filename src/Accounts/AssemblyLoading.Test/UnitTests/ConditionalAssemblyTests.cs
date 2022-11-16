@@ -1,3 +1,17 @@
+// ----------------------------------------------------------------------------------
+//
+// Copyright Microsoft Corporation
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ----------------------------------------------------------------------------------
+
 using Microsoft.Azure.PowerShell.AssemblyLoading.Test.Mocks;
 using System;
 using System.Runtime.InteropServices;
@@ -5,12 +19,12 @@ using Xunit;
 
 namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
 {
-    public class ConditionalAssemblyBuilderTests
+    public class ConditionalAssemblyTests
     {
         [Fact]
         public void ShouldLoadAssemblyWithoutConstraint()
         {
-            var context = new MockConditionalAssemblyBuilderContext();
+            var context = new MockConditionalAssemblyContext();
             var assembly = NewDummyAssembly(context);
             Assert.True(assembly.ShouldLoad);
         }
@@ -19,7 +33,7 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
         public void ShouldLoadAssemblyAccordingToPSVersion()
         {
             // windows powershell
-            var context = new MockConditionalAssemblyBuilderContext()
+            var context = new MockConditionalAssemblyContext()
             { PSVersion = Version.Parse("5.1.22621.608") };
             var windowsPSAssembly = NewDummyAssembly(context).WithWindowsPowerShell();
             var psCoreAssembly = NewDummyAssembly(context).WithPowerShellCore();
@@ -42,7 +56,7 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
         public void ShouldLoadAssemblyAccordingToOS()
         {
             // windows
-            var context = new MockConditionalAssemblyBuilderContext()
+            var context = new MockConditionalAssemblyContext()
             { OS = OSPlatform.Windows };
             var windowsAssembly = NewDummyAssembly(context).WithWindows();
             var linuxAssembly = NewDummyAssembly(context).WithLinux();
@@ -54,7 +68,7 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
             Assert.True(neturalAssembly.ShouldLoad);
 
             // linux
-            context = new MockConditionalAssemblyBuilderContext()
+            context = new MockConditionalAssemblyContext()
             { OS = OSPlatform.Linux };
             windowsAssembly = NewDummyAssembly(context).WithWindows();
             linuxAssembly = NewDummyAssembly(context).WithLinux();
@@ -66,7 +80,7 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
             Assert.True(neturalAssembly.ShouldLoad);
 
             // macos
-            context = new MockConditionalAssemblyBuilderContext()
+            context = new MockConditionalAssemblyContext()
             { OS = OSPlatform.OSX };
             windowsAssembly = NewDummyAssembly(context).WithWindows();
             linuxAssembly = NewDummyAssembly(context).WithLinux();
@@ -82,7 +96,7 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
         public void ShouldLoadAssemblyAccordingToCpuArch()
         {
             // x86
-            var context = new MockConditionalAssemblyBuilderContext()
+            var context = new MockConditionalAssemblyContext()
             { OSArchitecture = Architecture.X86 };
             var x86Assembly = NewDummyAssembly(context).WithX86();
             var x64Assembly = NewDummyAssembly(context).WithX64();
@@ -94,7 +108,7 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
             Assert.True(neturalAssembly.ShouldLoad);
 
             // x64
-            context = new MockConditionalAssemblyBuilderContext()
+            context = new MockConditionalAssemblyContext()
             { OSArchitecture = Architecture.X64 };
             x86Assembly = NewDummyAssembly(context).WithX86();
             x64Assembly = NewDummyAssembly(context).WithX64();
@@ -106,7 +120,7 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
             Assert.True(neturalAssembly.ShouldLoad);
 
             // arm64
-            context = new MockConditionalAssemblyBuilderContext()
+            context = new MockConditionalAssemblyContext()
             { OSArchitecture = Architecture.Arm64 };
             x86Assembly = NewDummyAssembly(context).WithX86();
             x64Assembly = NewDummyAssembly(context).WithX64();
@@ -123,7 +137,7 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
         {
             // assembly requires powershell 7+ on linux
             // if both meet, it should be loaded
-            var context = new MockConditionalAssemblyBuilderContext();
+            var context = new MockConditionalAssemblyContext();
             context.OS = OSPlatform.Linux;
             context.PSVersion = Version.Parse("7.3.0");
             var assembly = NewDummyAssembly(context).WithLinux().WithPowerShellVersion(Version.Parse("7.0.0"));
@@ -145,9 +159,9 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading.Test.UnitTests
         }
         //todo: how to test same assembly different framework?
 
-        private static ConditionalAssemblyBuilder NewDummyAssembly(MockConditionalAssemblyBuilderContext context)
+        private static ConditionalAssembly NewDummyAssembly(MockConditionalAssemblyContext context)
         {
-            return new ConditionalAssemblyBuilder(context, "name", "framework", new Version(1, 0, 0));
+            return new ConditionalAssembly(context, "name", "framework", new Version(1, 0, 0));
         }
     }
 }

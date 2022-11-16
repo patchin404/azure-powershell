@@ -28,7 +28,7 @@ namespace Microsoft.Azure.PowerShell.AuthenticationAssemblyLoadContext
 
         static AzAssemblyLoadContextInitializer()
         {
-            var azSharedAssemblies = AssemblyLoading.ConditionalAssemblyCollection.GetAssemblies();
+            var azSharedAssemblies = AssemblyLoading.ConditionalAssemblyProvider.GetAssemblies();
             ////TODO: Generate assembly version info into AzSharedAssemblies.json during build
             //var azSharedAssemblies = new Dictionary<string, Version>()
             //{

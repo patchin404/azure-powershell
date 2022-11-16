@@ -1,21 +1,32 @@
-﻿using System;
+﻿// ----------------------------------------------------------------------------------
+//
+// Copyright Microsoft Corporation
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ----------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Microsoft.Azure.PowerShell.AssemblyLoading
 {
-    public static class ConditionalAssemblyCollection
+    public static class ConditionalAssemblyProvider
     {
-        private static IConditionalAssemblyBuilderContext _context;
-        private static IEnumerable<IConditionalAssemblyBuilder> _assemblyBuilders;
+        private static IConditionalAssemblyContext _context;
+        private static IEnumerable<IConditionalAssembly> _assemblies;
 
-        // maybe: use Lazy to defer the initialization
-
-        public static void Initialize(IConditionalAssemblyBuilderContext context)
+        public static void Initialize(IConditionalAssemblyContext context)
         {
             _context = context;
-            _assemblyBuilders = new List<IConditionalAssemblyBuilder>()
+            _assemblies = new List<IConditionalAssembly>()
             {
                 CreateAssembly("netcoreapp2.1", "Azure.Core", "1.25.0.0").WithPowerShellCore(),
                 CreateAssembly("netcoreapp2.1", "Microsoft.Identity.Client", "4.46.0.0").WithPowerShellCore(),
@@ -55,11 +66,12 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading
             };
         }
 
-        private static ConditionalAssemblyBuilder CreateAssembly(string framework, string name, string version) => new ConditionalAssemblyBuilder(_context, name, framework, new Version(version));
+        private static ConditionalAssembly CreateAssembly(string framework, string name, string version)
+            => new ConditionalAssembly(_context, name, framework, new Version(version));
 
         public static IDictionary<string, (string Framework, Version Version)> GetAssemblies()
         {
-            return _assemblyBuilders.Where(x => x.ShouldLoad).ToDictionary(x => x.Name, x => (x.Framework, x.Version));
+            return _assemblies.Where(x => x.ShouldLoad).ToDictionary(x => x.Name, x => (x.Framework, x.Version));
         }
     }
 }
