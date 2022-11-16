@@ -48,7 +48,6 @@ namespace Microsoft.Azure.PowerShell.AssemblyLoading
                 CreateAssembly("netstandard2.0", "System.Threading.Tasks.Extensions", "4.2.0.1").WithWindowsPowerShell(), //standard
 
                 CreateAssembly("netfx", "Azure.Core", "1.25.0.0").WithWindowsPowerShell(),
-                //CreateAssembly("netfx", "Azure.Identity", "1.6.1.0").WithWindowsPowerShell(),
                 CreateAssembly("netfx", "Microsoft.Bcl.AsyncInterfaces", "1.1.1.0").WithWindowsPowerShell(), // can use standard?
                 CreateAssembly("netfx", "Microsoft.Identity.Client", "4.46.2.0").WithWindowsPowerShell(), //4.46.0.0?
                 CreateAssembly("netfx", "Microsoft.Identity.Client.Extensions.Msal", "2.23.0.0").WithWindowsPowerShell(),
